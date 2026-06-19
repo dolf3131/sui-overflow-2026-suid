@@ -23,6 +23,13 @@ module suid::credential {
         id: UID,
     }
 
+    fun init(ctx: &mut TxContext) {
+        transfer::transfer(
+            AdminCap { id: object::new(ctx) },
+            tx_context::sender(ctx)
+        );
+    }
+
     // Events
     public struct CredentialIssued has copy, drop, store {
         credential_id: address,

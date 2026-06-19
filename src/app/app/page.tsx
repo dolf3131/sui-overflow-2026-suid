@@ -1,13 +1,57 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { Card, CardHeader, CardContent } from "@/components/ui/Card";
+import { Card, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { SuIDCard } from "@/components/site/SuIDCard";
 import { ButtonLink } from "@/components/ui/Button";
+import { useZkLogin } from "@/components/auth/ZkLoginProvider";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+
+const PACKAGE_ID = "0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a";
 
 export default function PortfolioPage() {
+  const { userAddress } = useZkLogin();
+  const [credentials, setCredentials] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCredentials() {
+      if (!userAddress) return;
+      try {
+        const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+        const res = await client.getOwnedObjects({
+          owner: userAddress,
+          filter: {
+            StructType: `${PACKAGE_ID}::credential::Credential`,
+          },
+          options: {
+            showContent: true,
+          },
+        });
+
+        const parsed = res.data.map((obj: any) => {
+          const fields = obj.data.content.fields;
+          return {
+            id: obj.data.objectId,
+            eventName: fields.credential_type,
+            issuer: fields.issuer,
+            credentialId: fields.credential_id,
+            verified: fields.verified,
+          };
+        });
+        setCredentials(parsed);
+      } catch (err) {
+        console.error("Failed to fetch credentials:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCredentials();
+  }, [userAddress]);
+
   return (
     <Container>
       <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
@@ -17,37 +61,41 @@ export default function PortfolioPage() {
             <Badge tone="success">Verified</Badge>
           </div>
           <p className="mt-2 text-[color:var(--muted)]">
-            Your collected events, certificates, and evidence on Sui.
+            Your collected events, certificates, and evidence on Sui Testnet.
           </p>
 
           <div className="mt-10 grid gap-5">
             <h2 className="text-2xl font-bold">Verified Events</h2>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <div className="font-bold">Sui Builder House Seoul</div>
-                  <div className="text-sm text-[color:var(--muted)]">
-                    Hackathon Participant
-                  </div>
+            
+            {loading ? (
+              <div className="p-10 text-center text-[color:var(--muted)] font-bold animate-pulse">
+                Querying Sui Testnet for credentials...
+              </div>
+            ) : credentials.length === 0 ? (
+              <Card>
+                <div className="p-8 text-center text-[color:var(--muted)]">
+                  No credentials found on-chain. Go to the Issuer Portal to issue one!
                 </div>
-                <Badge>0xSui...</Badge>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <div className="font-bold">Web3 Global Conference</div>
-                  <div className="text-sm text-[color:var(--muted)]">
-                    Speaker
-                  </div>
-                </div>
-                <Badge>0xWeb3...</Badge>
-              </CardHeader>
-            </Card>
+              </Card>
+            ) : (
+              credentials.map((cred) => (
+                <Card key={cred.id}>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <div className="font-bold">{cred.eventName}</div>
+                      <div className="text-sm text-[color:var(--muted)]">
+                        Issued by {cred.issuer}
+                      </div>
+                    </div>
+                    <Badge>ID: {cred.credentialId}</Badge>
+                  </CardHeader>
+                </Card>
+              ))
+            )}
             
             <div className="mt-5 flex justify-center">
               <ButtonLink href="/app/resume" variant="primary">
-                Issue Resume PDF
+                Issue Resume PDF (Free)
               </ButtonLink>
             </div>
           </div>

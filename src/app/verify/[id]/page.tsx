@@ -6,18 +6,41 @@ import { Container } from "@/components/ui/Container";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 
 export default function VerifyRecordPage() {
   const params = useParams();
   const id = params.id as string;
   const [loading, setLoading] = useState(true);
+  const [credential, setCredential] = useState<any>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    async function verifyOnChain() {
+      if (!id) return;
+      try {
+        const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+        const res = await client.getObject({
+          id,
+          options: { showContent: true },
+        });
 
-  const isValid = id === "7f3k";
+        if (res.data && res.data.content && res.data.content.dataType === "moveObject") {
+          setCredential(res.data.content.fields);
+        } else {
+          setCredential(null);
+        }
+      } catch (err) {
+        console.error("Verification failed:", err);
+        setCredential(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    verifyOnChain();
+  }, [id]);
+
+  const isValid = credential !== null;
 
   return (
     <Container>
@@ -28,7 +51,7 @@ export default function VerifyRecordPage() {
           <div className="flex flex-col items-center justify-center p-20 space-y-4">
             <div className="w-8 h-8 border-4 border-[color:var(--primary)] border-t-transparent rounded-full animate-spin" />
             <p className="font-mono text-sm font-bold text-[color:var(--muted)] animate-pulse">
-              Querying Sui network for suid://verify/{id}...
+              Querying Sui Testnet for Object {id.substring(0, 10)}...
             </p>
           </div>
         ) : (
@@ -48,10 +71,10 @@ export default function VerifyRecordPage() {
                     )}
                   </div>
                   <p className="mt-2 font-mono text-sm text-[color:var(--muted)]">
-                    Hash: SUID-{id.toUpperCase()}-2A91
+                    Object ID: {id}
                   </p>
                 </div>
-                {isValid && <Badge tone="success">Verified</Badge>}
+                {isValid && <Badge tone="success">Verified On-Chain</Badge>}
               </div>
 
               {isValid ? (
@@ -59,31 +82,30 @@ export default function VerifyRecordPage() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <div className="font-bold text-[color:var(--muted)]">SUBJECT</div>
-                      <div className="mt-1 font-mono">0x3f9...c92a</div>
+                      <div className="mt-1 font-mono break-all">{credential.owner}</div>
                     </div>
                     <div>
                       <div className="font-bold text-[color:var(--muted)]">ISSUER</div>
-                      <div className="mt-1 font-mono">Sui Korea Community</div>
+                      <div className="mt-1 font-mono">{credential.issuer}</div>
                     </div>
                   </div>
 
                   <div>
-                    <div className="font-bold text-[color:var(--muted)] mb-3">VERIFIED EVENTS</div>
+                    <div className="font-bold text-[color:var(--muted)] mb-3">VERIFIED EVENT DETAILS</div>
                     <ul className="space-y-3">
-                      <li className="flex items-center justify-between border-2 border-[color:var(--border)] p-3 bg-white">
-                        <span className="font-bold">Sui Builder House Seoul</span>
-                        <Badge>Valid</Badge>
-                      </li>
-                      <li className="flex items-center justify-between border-2 border-[color:var(--border)] p-3 bg-white">
-                        <span className="font-bold">Web3 Global Conference</span>
-                        <Badge>Valid</Badge>
+                      <li className="flex flex-col sm:flex-row sm:items-center justify-between border-2 border-[color:var(--border)] p-4 bg-white gap-4">
+                        <div>
+                          <div className="font-bold text-lg">{credential.credential_type}</div>
+                          <div className="text-sm text-gray-500 font-mono mt-1">Hash: {credential.credential_id}</div>
+                        </div>
+                        <Badge tone="success">Valid</Badge>
                       </li>
                     </ul>
                   </div>
                 </div>
               ) : (
                 <div className="mt-8 p-4 bg-red-50 border-2 border-red-200 text-red-600 font-bold text-center">
-                  The requested SuID record could not be found or has been revoked.
+                  The requested SuID record could not be found on the Sui Testnet or has been revoked.
                 </div>
               )}
             </CardContent>
