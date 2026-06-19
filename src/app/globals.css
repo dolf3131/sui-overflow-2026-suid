@@ -1,26 +1,447 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f7fb;
+  --foreground: #0b0f19;
+  --muted: #344054;
+  --border: #0b0f19;
+  --surface: #ffffff;
+  --primary: #2f80ff;
+  --primary-foreground: #ffffff;
+  --accent: #ffd84d;
+  --success: #8df06f;
+  --danger: #ff6b6b;
+  --shadow: 6px 6px 0 0 #0b0f19;
+  --shadow-lg: 10px 10px 0 0 #0b0f19;
+  --app-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --app-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --shadow-brutal: var(--shadow);
+  --shadow-brutal-lg: var(--shadow-lg);
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--app-font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+* {
+  border-color: var(--border);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nb-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px) rotate(-0.6deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes nb-snap-in {
+    0% {
+      opacity: 0;
+      transform: translateY(28px) rotate(-2deg);
+      box-shadow: 0 0 0 0 #0b0f19;
+    }
+    62% {
+      opacity: 1;
+      transform: translateY(-3px) rotate(0.8deg);
+      box-shadow: 12px 12px 0 0 #0b0f19;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotate(0);
+      box-shadow: var(--shadow);
+    }
+  }
+
+  @keyframes nb-stamp {
+    0% {
+      opacity: 0;
+      transform: scale(1.55) rotate(-10deg);
+    }
+    58% {
+      opacity: 1;
+      transform: scale(0.92) rotate(2deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(-2deg);
+    }
+  }
+
+  @keyframes nb-scan {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(420%);
+    }
+  }
+
+  @keyframes nb-proof-rotate {
+    0% {
+      opacity: 0;
+      transform: translateY(14px) rotate(1.5deg);
+    }
+    3%,
+    24% {
+      opacity: 1;
+      transform: translateY(0) rotate(0);
+    }
+    25%,
+    100% {
+      opacity: 0;
+      transform: translateY(-14px) rotate(-1.5deg);
+    }
+  }
+
+  @keyframes nb-proof-panel {
+    0% {
+      opacity: 0;
+      transform: translateY(18px) rotate(1.25deg);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-2px) rotate(-0.35deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotate(0);
+    }
+  }
+
+  @keyframes nb-shape-drift {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(6deg);
+    }
+    50% {
+      transform: translate(8px, 4px) rotate(13deg);
+    }
+  }
+
+  @keyframes nb-shape-drift-reverse {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-6deg);
+    }
+    50% {
+      transform: translate(-8px, -4px) rotate(-13deg);
+    }
+  }
+
+  @keyframes nb-dot-hop {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes nb-verified-badge {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(-1deg) scale(1.04);
+    }
+  }
+
+  @keyframes nb-mini-proof-icon {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    35% {
+      transform: rotate(4deg);
+    }
+    70% {
+      transform: rotate(-4deg);
+    }
+  }
+
+  @keyframes nb-stat-tile {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(-1px, -2px);
+    }
+  }
+
+  @keyframes nb-step-glow {
+    0%,
+    100% {
+      background-color: var(--surface);
+    }
+    50% {
+      background-color: var(--accent);
+    }
+  }
+
+  @keyframes nb-pop {
+    0% {
+      transform: translateY(6px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .nb-fade-up {
+    animation: nb-fade-up 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .nb-pop {
+    animation: nb-pop 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .nb-snap-in {
+    animation: nb-snap-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .nb-stamp-pop {
+    animation: nb-stamp 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .nb-delay-1 {
+    animation-delay: 80ms;
+  }
+
+  .nb-delay-2 {
+    animation-delay: 160ms;
+  }
+
+  .nb-delay-3 {
+    animation-delay: 240ms;
+  }
+
+  .nb-delay-4 {
+    animation-delay: 320ms;
+  }
+
+  .nb-delay-5 {
+    animation-delay: 400ms;
+  }
+
+  .nb-delay-6 {
+    animation-delay: 480ms;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes nb-float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .nb-float {
+    will-change: transform;
+    animation: nb-float 4.2s ease-in-out infinite;
+  }
+
+  .nb-scan-line {
+    animation: nb-scan 2.6s linear infinite;
+  }
+
+  .nb-step-glow {
+    animation: nb-step-glow 2.4s steps(2, end) infinite;
+  }
+
+  .nb-proof-rotator > * {
+    animation: nb-proof-rotate 12s linear infinite;
+  }
+
+  .nb-proof-rotator > :nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .nb-proof-rotator > :nth-child(2) {
+    animation-delay: 3s;
+  }
+
+  .nb-proof-rotator > :nth-child(3) {
+    animation-delay: 6s;
+  }
+
+  .nb-proof-rotator > :nth-child(4) {
+    animation-delay: 9s;
+  }
+
+  .nb-proof-panel {
+    animation: nb-proof-panel 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .nb-shape-drift {
+    animation: nb-shape-drift 6s ease-in-out infinite;
+  }
+
+  .nb-shape-drift-reverse {
+    animation: nb-shape-drift-reverse 7s ease-in-out infinite;
+  }
+
+  .nb-dot-hop {
+    animation: nb-dot-hop 1.6s steps(2, end) infinite;
+  }
+
+  .nb-verified-badge {
+    animation: nb-verified-badge 2.2s steps(2, end) infinite;
+  }
+
+  .nb-mini-proof-icon {
+    animation: nb-mini-proof-icon 3s steps(2, end) infinite;
+  }
+
+  .nb-stat-tile {
+    animation: nb-stat-tile 3.6s steps(2, end) infinite;
+  }
+
+  .nb-stat-tile:nth-child(2) {
+    animation-delay: 160ms;
+  }
+
+  .nb-stat-tile:nth-child(3) {
+    animation-delay: 320ms;
+  }
+
+  .nb-stat-tile:nth-child(4) {
+    animation-delay: 480ms;
+  }
+
+  @keyframes nb-draw-x {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .nb-draw-x {
+    transform-origin: left center;
+    animation: nb-draw-x 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    @keyframes nb-scroll-card {
+      0% {
+        opacity: 0.4;
+        transform: translateY(24px);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nb-scroll-card {
+      animation: nb-scroll-card both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 45%;
+    }
+  }
+}
+
+@keyframes nb-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.nb-marquee {
+  will-change: transform;
+  animation: nb-marquee 180s linear infinite;
+}
+
+.nb-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(11, 15, 25, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(11, 15, 25, 0.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.nb-dot-grid {
+  background-image: radial-gradient(rgba(11, 15, 25, 0.26) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.nb-section {
+  scroll-margin-top: 96px;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .print-hide {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  .resume-print-page {
+    border: 0 !important;
+    box-shadow: none !important;
+    min-height: 100vh;
+    padding: 32px !important;
+  }
 }

@@ -1,4 +1,11 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Overflow Passport (Sui Overflow MVP)
+
+White, minimal UI inspired by [`overflow.sui.io`](https://overflow.sui.io/) for a hybrid-event participation system:
+
+- **Offline**: QR check-in → Passport stamp
+- **Online**: session code / evidence → issuer-backed credential (demo UI)
+- **Team**: contributions → role badges (demo UI)
+- **Verify**: public verification page (demo UI)
 
 ## Getting Started
 
@@ -16,21 +23,24 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### zkLogin (Google) for Web2-style onboarding
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This demo uses Google OAuth to obtain an OpenID JWT, derives a zkLogin address internally, and **does not show the wallet address** in the UI.
 
-## Learn More
+Create `.env.local` from `.env.example`:
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`: Google OAuth client id (GIS)
+- `ZKLOGIN_SALT_SECRET`: server secret to derive a deterministic user salt
+- `ZKLOGIN_PROVER_URL`: optional prover URL (defaults to `https://prover-dev.mystenlabs.com/v1`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/` Landing
+- `/app` App shell + pages
+  - `/app/events`
+  - `/app/credentials`
+  - `/app/team`
+  - `/app/issuer`
+- `/verify` Public verification (demo)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project uses local system font stacks so production builds do not depend on fetching Google Fonts.
