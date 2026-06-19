@@ -6,13 +6,12 @@ import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 import { Transaction } from "@mysten/sui/transactions";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { decodeSuiPrivateKey } from "@mysten/sui/cryptography";
 
 const PACKAGE_ID = "0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a";
-const ADMIN_PRIV_KEY = "suiprivkey1qr7j6mfyee20t96gfznqa3jjsv2m4u3wf5kucgyywhpyvdprpm692rxddh6";
 
 export default function IssuerPortalPage() {
   const [loading, setLoading] = useState(false);
@@ -26,9 +25,12 @@ export default function IssuerPortalPage() {
     setLoading(true);
 
     try {
-      const client = new SuiClient({ url: getFullnodeUrl("testnet") });
-      const { secretKey } = decodeSuiPrivateKey(ADMIN_PRIV_KEY);
+      const adminKey = process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY;
+      if (!adminKey) throw new Error("Admin secret key is missing from environment variables.");
+
+      const { secretKey } = decodeSuiPrivateKey(adminKey);
       const keypair = Ed25519Keypair.fromSecretKey(secretKey);
+      const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" });
 
       const tx = new Transaction();
       // Generate a mock hash for the credential ID

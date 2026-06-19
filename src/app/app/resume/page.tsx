@@ -10,7 +10,7 @@ import jsPDF from "jspdf";
 import { toJpeg } from "html-to-image";
 import { CheckCircle2, ShieldCheck, Fingerprint } from "lucide-react";
 import { useZkLogin } from "@/components/auth/ZkLoginProvider";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 
 const PACKAGE_ID = "0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a";
 
@@ -26,7 +26,7 @@ export default function ResumePage() {
     async function fetchCredentials() {
       if (!userAddress) return;
       try {
-        const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+        const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" });
         const res = await client.getOwnedObjects({
           owner: userAddress,
           filter: {

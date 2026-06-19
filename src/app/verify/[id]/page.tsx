@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { CheckCircle2, XCircle } from "lucide-react";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 
 export default function VerifyRecordPage() {
   const params = useParams();
@@ -18,7 +18,7 @@ export default function VerifyRecordPage() {
     async function verifyOnChain() {
       if (!id) return;
       try {
-        const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+        const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" });
         const res = await client.getObject({
           id,
           options: { showContent: true },

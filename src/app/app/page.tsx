@@ -7,20 +7,24 @@ import { Badge } from "@/components/ui/Badge";
 import { SuIDCard } from "@/components/site/SuIDCard";
 import { ButtonLink } from "@/components/ui/Button";
 import { useZkLogin } from "@/components/auth/ZkLoginProvider";
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from "@mysten/sui/jsonRpc";
 
 const PACKAGE_ID = "0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a";
 
 export default function PortfolioPage() {
-  const { userAddress } = useZkLogin();
+  const { isLoggedIn, userAddress } = useZkLogin();
   const [credentials, setCredentials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCredentials() {
-      if (!userAddress) return;
+      if (!userAddress) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+        const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" });
         const res = await client.getOwnedObjects({
           owner: userAddress,
           filter: {
