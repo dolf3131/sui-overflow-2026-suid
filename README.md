@@ -1,6 +1,11 @@
-# 🏆 SuID: The Web3 Alternative to Credly
+<div align="center">
+  <img src="public/logo.png" alt="SuID Logo" width="120" />
+  <h1>🏆 SuID: The Web3 Alternative to Credly</h1>
+  <p><strong>Built for the Sui Overflow 2026 Hackathon</strong></p>
+  <img src="public/banner.png" alt="SuID Banner" width="100%" />
+</div>
 
-**Built for the Sui Overflow 2026 Hackathon**
+<br/>
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://sui-overflow-mu.vercel.app/) 
 [![Sui Testnet](https://img.shields.io/badge/Sui_Testnet-Deployed-blue?style=for-the-badge&logo=sui)](https://suivision.xyz/package/0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a)
