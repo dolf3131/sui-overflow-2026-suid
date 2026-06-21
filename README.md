@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/logo.png" alt="SuID Logo" width="120" />
-  <h1>🏆 SuID: The Web3 Alternative to Credly</h1>
-  <p><strong>Built for the Sui Overflow 2026 Hackathon</strong></p>
+  <h1>🏆 SuID: Immutable Proof Archive & Career Identity</h1>
+  <p><strong>Built for the Sui Overflow 2026 Hackathon (Special - Walrus Track)</strong></p>
   <img src="public/banner.png" alt="SuID Banner" width="100%" />
 </div>
 
@@ -10,18 +10,18 @@
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://sui-overflow-mu.vercel.app/) 
 [![Sui Testnet](https://img.shields.io/badge/Sui_Testnet-Deployed-blue?style=for-the-badge&logo=sui)](https://suivision.xyz/package/0x6929ada47f1d3a6ef94a73e0896a99cfc985cb5e878952032ed73592a423137a)
 
-**SuID** is a fully on-chain, hybrid-event credential system that acts as a decentralized alternative to traditional Web2 certification platforms (like Credly). By leveraging **Sui's Object-Centric Model** and **zkLogin**, SuID completely abstracts away the complexities of Web3, offering a seamless Web2-like experience for end-users while ensuring absolute cryptographic authenticity.
+**SuID** is a decentralized, immutable proof archive for career credentials. Rather than simply uploading unverified PDFs to Web2 platforms, SuID leverages **Sui Objects** and concepts from **Walrus** to securely store, verify, and replay artifact provenance. By utilizing **zkLogin**, we abstract away the complexities of Web3, offering a seamless UX while guaranteeing absolute cryptographic authenticity and data reusability.
 
 ---
 
 ## 🚀 The Problem & Our Solution
 
-**The Problem**: Verifying resumes and credentials today is broken. Users upload unverified PDFs to LinkedIn or rely on centralized platforms like Credly that lock data into walled gardens. On the other hand, traditional Web3 NFT certificates require users to download wallet extensions, manage seed phrases, and pay gas fees—a massive barrier to entry.
+**The Problem**: Career credentials and professional histories are currently fragmented, unverified, and prone to loss. Existing solutions are either closed walled-gardens (like Credly) or require massive UX hurdles (wallets, seed phrases) that deter mainstream adoption. More importantly, there is no standardized way to guarantee *artifact provenance*—proving exactly who issued a credential, when, and ensuring the data can be reliably retrieved and verified by any third party without relying on the original issuer's servers.
 
-**The SuID Solution**: 
-- **User-Owned & Decentralized**: Credentials are natively owned by the user on the Sui blockchain as Move Objects.
-- **Frictionless Onboarding**: Using Sui's **zkLogin**, users log in with Google. No wallet, no seed phrase.
-- **Gasless Experience**: Issuers pay the gas to mint the credential. Users simply view and export their verified data.
+**The SuID Solution (Walrus / Proof Archive Approach)**: 
+- **Immutable Artifact Provenance**: Credentials are not just text; they are immutable state changes recorded as Move Objects on Sui. This ensures permanent, tamper-proof storage of professional milestones.
+- **Frictionless zkLogin**: Users authenticate with Google. No wallet extensions, no seed phrases. The onboarding is instant.
+- **Verifiable Data Reusability**: Third parties (employers, audit systems) can independently query the Sui Testnet to restore, verify, and reuse the credential data at any time, eliminating the need for manual background checks.
 
 ---
 
