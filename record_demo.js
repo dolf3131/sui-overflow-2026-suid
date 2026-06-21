@@ -36,7 +36,7 @@ function generateAudio() {
   console.log("Generating audio files...");
   for (const script of scripts) {
     const filename = `audio_${script.id}.aiff`;
-    execSync(`say -v Alex -r 185 -o ${filename} "${script.text}"`);
+    execSync(`say -v Samantha -r 175 -o ${filename} "${script.text}"`);
     
     // Get duration
     const durationStr = execSync(`ffprobe -i ${filename} -show_entries format=duration -v quiet -of csv="p=0"`).toString().trim();
@@ -159,15 +159,11 @@ async function main() {
   }, scripts[4].duration);
 
   console.log("Merging video and audio...");
-  for (let i = 1; i <= 5; i++) {
-    execSync(`ffmpeg -y -i video_${i}.webm -i audio_${i}.aiff -c:v copy -c:a aac output_${i}.mp4`);
+  if (fs.existsSync('concat.txt')) fs.unlinkSync('concat.txt');
+  for (let i = 1; i <= scripts.length; i++) {
+    execSync(`ffmpeg -y -i video_${i}.webm -i audio_${i}.aiff -c:v libx264 -preset fast -c:a aac -shortest output_${i}.mp4`, { stdio: 'pipe' });
+    execSync(`echo "file 'output_${i}.mp4'" >> concat.txt`);
   }
-
-  let concatList = '';
-  for (let i = 1; i <= 5; i++) {
-    concatList += `file 'output_${i}.mp4'\n`;
-  }
-  fs.writeFileSync('concat.txt', concatList);
 
   execSync(`ffmpeg -y -f concat -safe 0 -i concat.txt -c copy final_demo_video.mp4`);
   console.log("Done! final_demo_video.mp4 created.");
