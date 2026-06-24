@@ -6,7 +6,7 @@ import { useZkLogin } from "@/components/auth/ZkLoginProvider";
 import { Container } from "@/components/ui/Container";
 
 export function SiteHeader() {
-  const { isLoggedIn, login, logout } = useZkLogin();
+  const { isLoggedIn, login, logout, demoLogin } = useZkLogin();
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-[color:var(--border)] bg-[color:var(--background)]/90 backdrop-blur-md">
@@ -38,12 +38,20 @@ export function SiteHeader() {
               Disconnect
             </button>
           ) : (
-            <button
-              onClick={login}
-              className="border-2 border-[color:var(--border)] bg-[color:var(--primary)] px-4 py-1.5 text-sm font-bold text-[color:var(--primary-foreground)] transition-all hover:-translate-y-0.5 hover:[box-shadow:var(--shadow-sm)]"
-            >
-              Connect Google
-            </button>
+            <>
+              <button
+                onClick={demoLogin}
+                className="border-2 border-[color:var(--border)] bg-[color:var(--accent)] px-4 py-1.5 text-sm font-bold text-[color:var(--foreground)] transition-all hover:-translate-y-0.5 hover:[box-shadow:var(--shadow-sm)]"
+              >
+                Demo
+              </button>
+              <button
+                onClick={login}
+                className="border-2 border-[color:var(--border)] bg-[color:var(--primary)] px-4 py-1.5 text-sm font-bold text-[color:var(--primary-foreground)] transition-all hover:-translate-y-0.5 hover:[box-shadow:var(--shadow-sm)]"
+              >
+                Google Login
+              </button>
+            </>
           )}
         </nav>
       </Container>

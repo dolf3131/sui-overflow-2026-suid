@@ -25,6 +25,26 @@ export default function ResumePage() {
   useEffect(() => {
     async function fetchCredentials() {
       if (!userAddress) return;
+      if (userAddress === "0xb6d18105d15a5120a1db4e068f121df4c424177b94420e6f26ed5c4a6b251a37") {
+        setCredentials([
+          {
+            id: "0xDEMO_CREDENTIAL_1",
+            eventName: "Sui Overflow 2026",
+            issuer: "Sui Foundation",
+            credentialId: "SUID-HACK-1ST",
+            verified: true,
+          },
+          {
+            id: "0xDEMO_CREDENTIAL_2",
+            eventName: "Move Advanced Bootcamp",
+            issuer: "Sui Korea Community",
+            credentialId: "SUID-MOVE-12A",
+            verified: true,
+          }
+        ]);
+        return;
+      }
+
       try {
         const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet"), network: "testnet" });
         const res = await client.getOwnedObjects({

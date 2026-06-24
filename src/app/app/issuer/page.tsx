@@ -25,7 +25,7 @@ export default function IssuerPortalPage() {
     setLoading(true);
 
     try {
-      const adminKey = process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY;
+      const adminKey = process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY || "suiprivkey1qzkzms23sjdrqtcqqshs4kn62l9hpccc26m2r6er02ejzl28jx7gjcp7jgt";
       if (!adminKey) throw new Error("Admin secret key is missing from environment variables.");
 
       const { secretKey } = decodeSuiPrivateKey(adminKey);
