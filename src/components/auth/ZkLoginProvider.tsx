@@ -13,7 +13,6 @@ interface ZkLoginContextType {
   userAddress: string | null;
   login: () => void;
   logout: () => void;
-  demoLogin: () => void;
 }
 
 const ZkLoginContext = createContext<ZkLoginContextType | undefined>(undefined);
@@ -28,18 +27,13 @@ export function ZkLoginProvider({ children }: { children: ReactNode }) {
     // 1. Check local storage for existing session
     const storedJwt = localStorage.getItem("suid_zklogin_jwt");
     if (storedJwt) {
-      if (storedJwt === "MOCK_JWT") {
+      try {
+        const address = jwtToAddress(storedJwt, USER_SALT);
         setIsLoggedIn(true);
-        setUserAddress("0xb6d18105d15a5120a1db4e068f121df4c424177b94420e6f26ed5c4a6b251a37");
-      } else {
-        try {
-          const address = jwtToAddress(storedJwt, USER_SALT);
-          setIsLoggedIn(true);
-          setUserAddress(address);
-        } catch (err) {
-          console.error("Invalid stored JWT:", err);
-          localStorage.removeItem("suid_zklogin_jwt");
-        }
+        setUserAddress(address);
+      } catch (err) {
+        console.error("Invalid stored JWT:", err);
+        localStorage.removeItem("suid_zklogin_jwt");
       }
     }
     setIsLoading(false);
@@ -80,13 +74,6 @@ export function ZkLoginProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const demoLogin = () => {
-    setIsLoggedIn(true);
-    setUserAddress("0xb6d18105d15a5120a1db4e068f121df4c424177b94420e6f26ed5c4a6b251a37");
-    localStorage.setItem("suid_zklogin_jwt", "MOCK_JWT");
-    toast("Logged in with Demo Account!", "success");
-  };
-
   const logout = () => {
     setIsLoggedIn(false);
     setUserAddress(null);
@@ -95,7 +82,7 @@ export function ZkLoginProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ZkLoginContext.Provider value={{ isLoggedIn, isLoading, userAddress, login, logout, demoLogin }}>
+    <ZkLoginContext.Provider value={{ isLoggedIn, isLoading, userAddress, login, logout }}>
       {children}
     </ZkLoginContext.Provider>
   );
