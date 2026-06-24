@@ -63,6 +63,12 @@ export function ZkLoginProvider({ children }: { children: ReactNode }) {
   }, [toast]);
 
   const login = () => {
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      toast("Google Client ID is missing. Please set NEXT_PUBLIC_GOOGLE_CLIENT_ID in Vercel.", "error");
+      return;
+    }
+
     if (typeof window !== "undefined" && (window as any).google) {
       (window as any).google.accounts.id.prompt((notification: any) => {
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
